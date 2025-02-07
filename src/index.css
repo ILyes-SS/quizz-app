@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@layer base{
+  @font-face {
+    font-family: "Poppins";
+    src: url("../public/fonts/Poppins-Regular.ttf");
+  }
+  @font-face {
+    font-family: "Roboto";
+    src: url("../public/fonts/Roboto-Regular.ttf");
+  }
+}
+
+@layer utilities{
+
+.heading {
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-800;
+}
+
+.medium-text {
+  @apply text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed text-gray-700;
+}
+
+.paragraph {
+  @apply text-base md:text-lg lg:text-xl leading-loose text-gray-600;
+}
+
+.section {
+  @apply py-8 md:py-12 lg:py-16 bg-gray-50;
+}
+
+.container {
+  @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+
+}
