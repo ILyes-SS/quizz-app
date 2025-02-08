@@ -1,9 +1,33 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useStore } from "../Store";
+import { useQueries } from "@tanstack/react-query";
 
+const difficulties = ["easy", "medium", "hard"];
+
+async function fetchQuestions(difficulty, categoryId) {
+  const resp = await fetch(
+    `https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=${difficulty}`,
+    { mode: "cors" }
+  );
+  if (!resp.ok) {
+    throw new Error("could not fetch");
+  }
+  return resp.json();
+}
 const Quizz = () => {
-  const difficulties = ["easy", "intermediate", "hard"];
+  const categoryId = useStore((store) => store.categoryId);
+  const questionsQueries = useQueries({
+    queries: difficulties.map((difficulty) => {
+      return {
+        queryKey: ["questions", difficulty],
+        queryFn: () => fetchQuestions(difficulty, categoryId),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+        retry: 5,
+      };
+    }),
+  });
   const levelsStates = useStore((store) => store.levelsStates);
   const currentQuestion = useStore((store) => store.currentQuestion);
   const totalPoints = useStore((store) => store.totalPoints);
@@ -25,9 +49,14 @@ const Quizz = () => {
         break;
     }
   }
+  //console.log(questionsQueries);
+  const areAllDefined = questionsQueries.every((query) => query.data);
+  if (!areAllDefined) {
+    return <h1>Fetching questions...</h1>;
+  }
   return (
     <>
-      <Outlet />
+      <Outlet context={questionsQueries} />
       <h1>Total Points: {totalPoints}</h1>
       {levelsStates.map((level, index) => {
         return (
