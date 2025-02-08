@@ -21,7 +21,7 @@ export const routes = [
         path: "level/:levelId",
         children: [
           {
-            path: "",
+            index: true,
             element: <Question />,
           },
           {

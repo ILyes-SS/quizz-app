@@ -16,7 +16,7 @@ export function App() {
       <a onClick={handleRedirection} className="ml-5">
         {categoryId ? "continue" : "start"}
       </a>
-      <h2>the category: {categoryId}</h2>
+      <h2>the category:{categoryId}</h2>
     </>
   );
 }
