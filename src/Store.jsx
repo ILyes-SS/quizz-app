@@ -21,4 +21,11 @@ export const useStore = create((set) => ({
   currentQuestion: 1,
   setCurrentQuestion: (question) =>
     set((state) => ({ currentQuestion: question })),
+  results: [[], [], []],
+  setResults: (questionResult, level) =>
+    set((state) => ({
+      results: state.results.map((levelResults, i) =>
+        i === level ? [...levelResults, questionResult] : levelResults
+      ),
+    })),
 }));

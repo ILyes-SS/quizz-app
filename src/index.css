@@ -23,15 +23,15 @@ body{
 @layer utilities{
 
 .heading {
-  @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-800;
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight ;
 }
 
 .medium-text {
-  @apply text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed text-gray-700;
+  @apply text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed ;
 }
 
 .paragraph {
-  @apply text-base md:text-lg lg:text-xl leading-loose text-gray-600;
+  @apply text-base md:text-lg lg:text-xl leading-loose ;
 }
 
 .section {

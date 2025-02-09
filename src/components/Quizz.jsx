@@ -7,7 +7,7 @@ const difficulties = ["easy", "medium", "hard"];
 
 async function fetchQuestions(difficulty, categoryId) {
   const resp = await fetch(
-    `https://opentdb.com/api.php?amount=10&category=${categoryId}&difficulty=${difficulty}`,
+    `https://opentdb.com/api.php?amount=3&category=${categoryId}&difficulty=${difficulty}`,
     { mode: "cors" }
   );
   if (!resp.ok) {
@@ -49,7 +49,7 @@ const Quizz = () => {
         break;
     }
   }
-  //console.log(questionsQueries);
+  console.log(questionsQueries);
   const areAllDefined = questionsQueries.every((query) => query.data);
   if (!areAllDefined) {
     return <h1>Fetching questions...</h1>;
@@ -57,7 +57,9 @@ const Quizz = () => {
   return (
     <>
       <Outlet context={questionsQueries} />
-      <h1>Total Points: {totalPoints}</h1>
+      <h1>
+        Total Points: {totalPoints.reduce((prev, curr) => prev + curr, 0)}
+      </h1>
       {levelsStates.map((level, index) => {
         return (
           <div key={index + 1} onClick={() => handleRedirection(level, index)}>
@@ -67,6 +69,9 @@ const Quizz = () => {
         );
       })}
       <h1>Current Question: {currentQuestion}</h1>
+      <Link to={"/"} replace={true}>
+        Home
+      </Link>
     </>
   );
 };
