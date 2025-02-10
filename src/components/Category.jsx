@@ -19,7 +19,7 @@ const Category = () => {
         <div className="grid  grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
           {categories.map((category) => {
             return (
-              <div key={category.id} className="shadow-md p-5">
+              <div key={category.id} className="shadow-md ring-0 p-5">
                 <label
                   htmlFor={category.id}
                   className="flex flex-col items-center"

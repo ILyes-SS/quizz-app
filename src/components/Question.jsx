@@ -10,8 +10,14 @@ import {
 import { ArrowLeft } from "lucide-react";
 
 const Question = () => {
-  const { totalPoints, setTotalPoints, setResults, setCurrentQuestion } =
-    useStore();
+  const {
+    totalPoints,
+    setTotalPoints,
+    setResults,
+    setCurrentQuestion,
+    setLevelsStates,
+    levelsStates,
+  } = useStore();
   const userAnswer = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const { levelId } = useParams();
@@ -38,15 +44,19 @@ const Question = () => {
   function handleSubmit(e) {
     //add points, save answer
     e.preventDefault();
-    if (userAnswer.current === data.correct_answer)
+    let points = 0;
+    if (userAnswer.current === data.correct_answer) {
       //if answer is correct add points
-      setTotalPoints(1, levelId - 1);
+      points = 1;
+      setTotalPoints(points, levelId - 1);
+    }
     // save answer
     setResults(
       {
         answer: userAnswer.current,
         correct_answer: data.correct_answer,
-        points: 1,
+        points,
+        id: crypto.randomUUID(),
       },
       levelId - 1
     );
@@ -59,6 +69,8 @@ const Question = () => {
       setCurrentQuestion(questionNum + 1);
     } else {
       //level ended
+      setLevelsStates("COMPLETED", levelId - 1);
+      if (levelsStates[levelId]) setLevelsStates("ONGOING", levelId);
       navigate(`/quizz/level/${levelId}/results`);
       setCurrentQuestion(1);
     }

@@ -95,7 +95,6 @@ const Quizz = () => {
           );
         })}
       </section>
-      <h6 className="text-red-950">Current Question: {currentQuestion}</h6>
     </>
   );
 };
