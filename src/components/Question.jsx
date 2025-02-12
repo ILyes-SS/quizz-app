@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useStore } from "../Store";
 import {
   Link,
@@ -8,6 +8,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import gsap from "gsap";
 
 const Question = () => {
   const {
@@ -23,20 +24,43 @@ const Question = () => {
   const { levelId } = useParams();
   const questionsQueries = useOutletContext();
   const navigate = useNavigate();
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const randomIndex = useRef(
+    Math.floor(
+      Math.random() *
+        (questionsQueries[levelId - 1].data.results[
+          Number(searchParams.get("question")) - 1
+        ].incorrect_answers.length +
+          1)
+    )
+  );
+
+  useEffect(() => {
+    setIsSubmit(false);
+    setIsDisabled(false);
+    userAnswer.current = "none";
+  }, [searchParams.get("question")]);
 
   const questionNum = Number(searchParams.get("question"));
   const data = questionsQueries[levelId - 1].data.results[questionNum - 1];
 
-  const randomIndex = Math.floor(
-    Math.random() * (data.incorrect_answers.length + 1)
-  );
+  // const randomIndex = Math.floor(
+  //   Math.random() * (data.incorrect_answers.length + 1)
+  // );
   const answers = [...data.incorrect_answers].toSpliced(
-    randomIndex,
+    randomIndex.current,
     0,
     data.correct_answer
   );
   const levelPoints = totalPoints[levelId - 1];
 
+  function animateProgress() {
+    gsap.to("#progress", {
+      width: `${(questionNum / 3) * 100}%`,
+      duration: 1,
+    });
+  }
   function choseAnswer(e) {
     userAnswer.current = e.target.textContent;
   }
@@ -44,6 +68,11 @@ const Question = () => {
   function handleSubmit(e) {
     //add points, save answer
     e.preventDefault();
+    setIsSubmit(true);
+    setIsDisabled(true);
+
+    animateProgress();
+
     let points = 0;
     if (userAnswer.current === data.correct_answer) {
       //if answer is correct add points
@@ -65,13 +94,18 @@ const Question = () => {
 
     if (nextQuestion) {
       //there is still a question remaining
-      setSearchParams({ question: questionNum + 1 });
+      setTimeout(() => {
+        setSearchParams({ question: questionNum + 1 });
+      }, 2000);
       setCurrentQuestion(questionNum + 1);
     } else {
       //level ended
       setLevelsStates("COMPLETED", levelId - 1);
       if (levelsStates[levelId]) setLevelsStates("ONGOING", levelId);
-      navigate(`/quizz/level/${levelId}/results`);
+      setTimeout(() => {
+        navigate(`/quizz/level/${levelId}/results`);
+      }, 2000);
+
       setCurrentQuestion(1);
     }
   }
@@ -89,7 +123,15 @@ const Question = () => {
         <p>{questionNum} of 10</p>
         <p>pts:{levelPoints}</p>
       </section>
-      <section className="section">{/* progress bar */}</section>
+      <section className="section">
+        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div
+            id="progress"
+            className={"bg-primary h-2.5 rounded-full "}
+            style={{ width: `${((questionNum - 1) / 3) * 100}%` }}
+          ></div>
+        </div>
+      </section>
       <section className="section container ">
         <div className="p-5 inset-shadow-sm shadow-lg shadow-indigo-500/50 flex flex-col gap-3">
           <p className="text-gray-500 font-medium ">{data.category}</p>
@@ -100,7 +142,19 @@ const Question = () => {
                 return (
                   <button
                     type="button"
-                    className="text-blue-900 py-4 border focus:bg-primary"
+                    className={
+                      "text-blue-900 py-4 border focus:bg-primary " +
+                      (isSubmit
+                        ? answer === userAnswer.current
+                          ? userAnswer.current === data.correct_answer
+                            ? "bg-green-500 "
+                            : "bg-red-500 "
+                          : ""
+                        : "") +
+                      (isSubmit && answer === data.correct_answer
+                        ? "bg-green-500 "
+                        : "")
+                    }
                     onClick={choseAnswer}
                   >
                     {answer}
@@ -109,7 +163,13 @@ const Question = () => {
               })}
               <button
                 type="submit"
-                className="text-white py-1 px-3 bg-secondary rounded-md mt-4  hover:cursor-pointer"
+                disabled={isDisabled}
+                className={
+                  "text-white py-1 px-3 bg-secondary rounded-md mt-4 " +
+                  (isDisabled
+                    ? "bg-slate-400 cursor-not-allowed"
+                    : "hover:cursor-pointer")
+                }
               >
                 submit
               </button>
