@@ -36,18 +36,31 @@ const Question = () => {
     )
   );
 
+  const [seconds, setSeconds] = useState(5);
+  const submitBtn = useRef(null);
+  const focusSection = useRef(null);
+
   useEffect(() => {
     setIsSubmit(false);
     setIsDisabled(false);
+    setSeconds(6);
     userAnswer.current = "none";
+    document.activeElement.blur(); // Removes focus from the currently focused element (last answer)
   }, [searchParams.get("question")]);
+
+  useEffect(() => {
+    if (seconds <= 0) submitBtn.current.click(); // submit when reaching zero
+
+    const interval = setInterval(() => {
+      setSeconds((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup
+  }, [seconds]);
 
   const questionNum = Number(searchParams.get("question"));
   const data = questionsQueries[levelId - 1].data.results[questionNum - 1];
 
-  // const randomIndex = Math.floor(
-  //   Math.random() * (data.incorrect_answers.length + 1)
-  // );
   const answers = [...data.incorrect_answers].toSpliced(
     randomIndex.current,
     0,
@@ -61,6 +74,7 @@ const Question = () => {
       duration: 1,
     });
   }
+
   function choseAnswer(e) {
     userAnswer.current = e.target.textContent;
   }
@@ -76,7 +90,8 @@ const Question = () => {
     let points = 0;
     if (userAnswer.current === data.correct_answer) {
       //if answer is correct add points
-      points = 1;
+      if (seconds >= 3) points = 2;
+      else points = 1;
       setTotalPoints(points, levelId - 1);
     }
     // save answer
@@ -119,7 +134,7 @@ const Question = () => {
         <ArrowLeft scale={2} /> Quizz
       </Link>
       <section className="medium-text flex justify-between section container !pt-0">
-        <p>Timer {/* timer */}</p>
+        <p>Timer: {seconds >= 0 ? seconds : "0"}</p>
         <p>{questionNum} of 10</p>
         <p>pts:{levelPoints}</p>
       </section>
@@ -147,8 +162,8 @@ const Question = () => {
                       (isSubmit
                         ? answer === userAnswer.current
                           ? userAnswer.current === data.correct_answer
-                            ? "bg-green-500 "
-                            : "bg-red-500 "
+                            ? "!bg-green-500 "
+                            : "!bg-red-500 "
                           : ""
                         : "") +
                       (isSubmit && answer === data.correct_answer
@@ -163,6 +178,7 @@ const Question = () => {
               })}
               <button
                 type="submit"
+                ref={submitBtn}
                 disabled={isDisabled}
                 className={
                   "text-white py-1 px-3 bg-secondary rounded-md mt-4 " +
