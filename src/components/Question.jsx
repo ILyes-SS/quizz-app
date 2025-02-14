@@ -36,14 +36,13 @@ const Question = () => {
     )
   );
 
-  const [seconds, setSeconds] = useState(5);
+  const [seconds, setSeconds] = useState(30);
   const submitBtn = useRef(null);
-  const focusSection = useRef(null);
 
   useEffect(() => {
     setIsSubmit(false);
     setIsDisabled(false);
-    setSeconds(6);
+    setSeconds(30);
     userAnswer.current = "none";
     document.activeElement.blur(); // Removes focus from the currently focused element (last answer)
   }, [searchParams.get("question")]);
@@ -70,7 +69,7 @@ const Question = () => {
 
   function animateProgress() {
     gsap.to("#progress", {
-      width: `${(questionNum / 3) * 100}%`,
+      width: `${(questionNum / 6) * 100}%`,
       duration: 1,
     });
   }
@@ -90,7 +89,7 @@ const Question = () => {
     let points = 0;
     if (userAnswer.current === data.correct_answer) {
       //if answer is correct add points
-      if (seconds >= 3) points = 2;
+      if (seconds >= 20) points = 2;
       else points = 1;
       setTotalPoints(points, levelId - 1);
     }
@@ -135,7 +134,7 @@ const Question = () => {
       </Link>
       <section className="medium-text flex justify-between section container !pt-0">
         <p>Timer: {seconds >= 0 ? seconds : "0"}</p>
-        <p>{questionNum} of 10</p>
+        <p>{questionNum} of 6</p>
         <p>pts:{levelPoints}</p>
       </section>
       <section className="section">
@@ -143,7 +142,7 @@ const Question = () => {
           <div
             id="progress"
             className={"bg-primary h-2.5 rounded-full "}
-            style={{ width: `${((questionNum - 1) / 3) * 100}%` }}
+            style={{ width: `${((questionNum - 1) / 6) * 100}%` }}
           ></div>
         </div>
       </section>
