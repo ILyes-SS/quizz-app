@@ -23,15 +23,15 @@ body{
 @layer utilities{
 
 .heading {
-  @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight ;
+  @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight ;
 }
 
 .medium-text {
-  @apply text-xl md:text-2xl lg:text-3xl font-semibold leading-relaxed ;
+  @apply text-lg md:text-2xl lg:text-3xl font-semibold leading-relaxed ;
 }
 
 .paragraph {
-  @apply text-base md:text-lg lg:text-xl leading-loose ;
+  @apply text-base md:text-lg lg:text-xl leading-5 ;
 }
 
 .section {
@@ -41,6 +41,35 @@ body{
 .container {
   @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
 }
+/* Hide default radio button */
+input[type="radio"] {
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px; 
+  height: 20px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+}
 
+/* Custom checked state */
+input[type="radio"]:checked {
+  border-color: #746CF6; /* Change border color */
+}
+
+/* Create the dot */
+input[type="radio"]:checked::before {
+  content: "";
+  width: 12px; 
+  height: 12px;
+  background: #746CF6; /* Change dot color */
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 }

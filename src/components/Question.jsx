@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import gsap from "gsap";
+import he from "he";
 
 const Question = () => {
   const {
@@ -36,13 +37,13 @@ const Question = () => {
     )
   );
 
-  const [seconds, setSeconds] = useState(30);
+  const [seconds, setSeconds] = useState(3000);
   const submitBtn = useRef(null);
 
   useEffect(() => {
     setIsSubmit(false);
     setIsDisabled(false);
-    setSeconds(30);
+    setSeconds(3000);
     userAnswer.current = "none";
     document.activeElement.blur(); // Removes focus from the currently focused element (last answer)
   }, [searchParams.get("question")]);
@@ -125,53 +126,58 @@ const Question = () => {
   }
   // add a timer
   return (
-    <div className="h-[200dvh] w-[100dvw] z-10 absolute bg-white">
-      <Link
+    <div className="top-0 bg-gradient-to-r from-[#9683F6] via-[#696094] to-[#696094] h-[200dvh] w-[100dvw] z-10 absolute bg-white">
+      {/* <Link
         to={"/quizz"}
         className="flex paragraph items-center m-1 mb-0 -mt-1"
       >
         <ArrowLeft scale={2} /> Quizz
-      </Link>
+      </Link> */}
       <section className="medium-text flex justify-between section container !pt-0">
-        <p>Timer: {seconds >= 0 ? seconds : "0"}</p>
-        <p>{questionNum} of 6</p>
-        <p>pts:{levelPoints}</p>
+        <p className="flex gap-1 items-center text-accent">
+          <img className="h-6" src="/images/clock.png" alt="" />{" "}
+          {seconds >= 0 ? seconds : "0"}
+        </p>
+        <p className="text-white">{questionNum} of 6</p>
+        <p className="text-white">pts: {levelPoints}</p>
       </section>
-      <section className="section">
-        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+      <section className="section container !py-0 -my-3">
+        <div className="w-full bg-gray-800 rounded-full h-2.5 dark:bg-gray-700">
           <div
             id="progress"
-            className={"bg-primary h-2.5 rounded-full "}
+            className={"bg-accent h-2.5 rounded-full "}
             style={{ width: `${((questionNum - 1) / 6) * 100}%` }}
           ></div>
         </div>
       </section>
-      <section className="section container ">
-        <div className="p-5 inset-shadow-sm shadow-lg shadow-indigo-500/50 flex flex-col gap-3">
-          <p className="text-gray-500 font-medium ">{data.category}</p>
-          <p>{data.question}</p>
+      <section className="section  container ">
+        <div className="p-3 rounded-md bg-white inset-shadow-sm shadow-lg shadow-indigo-500/50 flex flex-col gap-3">
+          <p className="text-gray-500 -my-1 font-medium ">
+            {he.decode(data.category)}
+          </p>
+          <p>{he.decode(data.question)}</p>
           <form onSubmit={handleSubmit} className="text-red-950">
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {answers.map((answer) => {
                 return (
                   <button
                     type="button"
                     className={
-                      "text-blue-900 py-4 border focus:bg-primary " +
+                      "text-black py-1 border focus:bg-primary focus:text-white " +
                       (isSubmit
                         ? answer === userAnswer.current
                           ? userAnswer.current === data.correct_answer
-                            ? "!bg-green-500 "
-                            : "!bg-red-500 "
+                            ? "!bg-green-500 !text-white "
+                            : "!bg-red-500 !text-white "
                           : ""
                         : "") +
                       (isSubmit && answer === data.correct_answer
-                        ? "bg-green-500 "
+                        ? "bg-green-500 !text-white "
                         : "")
                     }
                     onClick={choseAnswer}
                   >
-                    {answer}
+                    {he.decode(answer)}
                   </button>
                 );
               })}
@@ -180,7 +186,7 @@ const Question = () => {
                 ref={submitBtn}
                 disabled={isDisabled}
                 className={
-                  "text-white py-1 px-3 bg-secondary rounded-md mt-4 " +
+                  "text-white col-span-2 py-1 px-3 bg-secondary rounded-md  " +
                   (isDisabled
                     ? "bg-slate-400 cursor-not-allowed"
                     : "hover:cursor-pointer")

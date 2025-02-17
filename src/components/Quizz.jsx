@@ -56,7 +56,34 @@ const Quizz = () => {
     return (
       <div className="h-screen flex items-center justify-center">
         {" "}
-        <h1 className="heading">Fetching questions...</h1>
+        <h1 className="medium-text text-secondary flex items-center gap-3">
+          Fetching questions
+          <svg
+            class="animate-spin h-5 w-5 text-primary"
+            viewBox="0 0 50 50"
+            fill="none"
+          >
+            <circle
+              class="opacity-25"
+              cx="25"
+              cy="25"
+              r="20"
+              stroke="currentColor"
+              stroke-width="5"
+            ></circle>
+            <circle
+              class="opacity-75"
+              cx="25"
+              cy="25"
+              r="20"
+              stroke="currentColor"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="100"
+              stroke-dashoffset="50"
+            ></circle>
+          </svg>
+        </h1>
       </div>
     );
   }
@@ -66,19 +93,19 @@ const Quizz = () => {
       <Link to={"/"} className="flex font-medium m-3 mb-0">
         <ArrowLeft /> Home
       </Link>
-      <section className="section items-center flex container">
-        <h1 className="bg-gradient-to-r from-[#746CF6] to-[#74F6D8] bg-clip-text text-transparent heading">
+      <section className="section gap-3 !py-2 items-center flex container">
+        <h1 className="bg-gradient-to-r from-[#746CF6] to-[#74F6D8] bg-clip-text text-transparent heading  ">
           Let's Learn!
         </h1>
-        <p className="ml-auto medium-text">
+        <p className="ml-auto medium-text text-center">
           Total Points: {totalPoints.reduce((prev, curr) => prev + curr, 0)}
         </p>
       </section>
-      <section className="section flex flex-col gap-5 ">
+      <section className="section flex flex-col gap-3 !py-2">
         {levelsStates.map((level, index) => {
           return (
             <div
-              className="text-white hover:cursor-pointer bg-gradient-to-r from-[#9D74F6] to-[#928DF6] w-[70dvw] container !ml-5"
+              className="text-white py-2 rounded-md hover:cursor-pointer bg-gradient-to-r from-[#9D74F6] to-[#928DF6] w-[70dvw] container !ml-5"
               key={index + 1}
               onClick={() => handleRedirection(level, index)}
             >
@@ -89,7 +116,7 @@ const Quizz = () => {
               ) : (
                 <Lock />
               )}
-              <p className="paragraph">Level {index + 1}</p>
+              <p className="paragraph -mb-3 mt-1">Level {index + 1}</p>
               <h1 className="heading">{difficulties[index]}</h1>
             </div>
           );
@@ -98,7 +125,7 @@ const Quizz = () => {
       {showPopup && (
         <div
           id="alert-border-1"
-          class="flex top-[50%] right-[5%] absolute items-center p-4 mb-4 text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:text-blue-400 dark:bg-gray-800 dark:border-blue-800"
+          class="flex top-[50%] right-[50%] translate-x-[50%] translate-xy[50%] fixed items-center p-4 mb-4 rounded-lg text-secondary border-t-4 border-none bg-purple-50"
           role="alert"
         >
           <svg
@@ -115,7 +142,7 @@ const Quizz = () => {
           </div>
           <button
             type="button"
-            class="ms-auto -mx-1.5 -my-1.5 bg-blue-50 text-blue-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
+            class="ms-auto -mx-1.5 -my-1.5 bg-purple-50 text-secondary rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
             data-dismiss-target="#alert-border-1"
             aria-label="Close"
             onClick={() => setShowPopup(false)}
