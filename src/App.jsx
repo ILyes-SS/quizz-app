@@ -1,9 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "./Store";
 import { cards } from "./utils/constants";
 import { Star } from "lucide-react";
-import { animateWithGsap } from "./utils/animation";
-import { useEffect } from "react";
 
 export function App() {
   const categoryId = useStore((store) => store.categoryId);

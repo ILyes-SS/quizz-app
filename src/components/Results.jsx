@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useStore } from "../Store";
-import he from "he";
 
 const Results = () => {
   const { levelId } = useParams();
