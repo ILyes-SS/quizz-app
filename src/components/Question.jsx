@@ -7,7 +7,6 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
 import gsap from "gsap";
 import he from "he";
 
@@ -37,13 +36,13 @@ const Question = () => {
     )
   );
 
-  const [seconds, setSeconds] = useState(3000);
+  const [seconds, setSeconds] = useState(45);
   const submitBtn = useRef(null);
 
   useEffect(() => {
     setIsSubmit(false);
     setIsDisabled(false);
-    setSeconds(3000);
+    setSeconds(45);
     userAnswer.current = "none";
     document.activeElement.blur(); // Removes focus from the currently focused element (last answer)
   }, [searchParams.get("question")]);
@@ -127,12 +126,6 @@ const Question = () => {
   // add a timer
   return (
     <div className="top-0 bg-gradient-to-r from-[#9683F6] via-[#696094] to-[#696094] h-[200dvh] w-[100dvw] z-10 absolute bg-white">
-      {/* <Link
-        to={"/quizz"}
-        className="flex paragraph items-center m-1 mb-0 -mt-1"
-      >
-        <ArrowLeft scale={2} /> Quizz
-      </Link> */}
       <section className="medium-text flex justify-between section container !pt-0">
         <p className="flex gap-1 items-center text-accent">
           <img className="h-6" src="/images/clock.png" alt="" />{" "}
